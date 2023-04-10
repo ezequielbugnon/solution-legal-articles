@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=JurisHand
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass
+    ports:
+      - 3306:3306
+    expose:
+      - '8080'
+    volumes:
+      - db:/var/lib/mysql
+  ts-node-docker:
+    depends_on:
+      - mysqldb
+    build:
+      context: ./api-rest/.
+      dockerfile: Dockerfile
+      target: base
+    container_name: ts-node-docker
+    expose:
+      - '4000'
+    ports:
+      - '4000:4000'
+    command: npm run dev
+
+volumes:
+  db:

@@ -1,0 +1,14 @@
+FROM node:16 as base
+
+# Create app directory
+WORKDIR /api-rest/
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+FROM base as production
+
+RUN npm run build
